@@ -8,11 +8,10 @@ use std::collections::HashMap;
 fn main() {
     let mut a = vec![ 12, 14, 15, 3, 12, 9, 5, 27, 18, 19, 20, 30, 6, 8];
 
-    find_median(&mut a);
-    // find_mode(&a);
-
+    println!("median {}", find_median(&mut a));
     println!("Sorted array= {:?}", a);
     println!("a length = {}", a.len());
+
     println!("mode {}", mode(&a));
 }
 
@@ -36,14 +35,15 @@ fn mode(a: &Vec<i32>) -> i32 {
     *result
 }
 
-fn find_median(a: &mut Vec<i32>) {
+fn find_median(a: &mut Vec<i32>) -> i32 {
     a.sort();
     let b = (a.len() as f64 / 2 as f64).floor();
     let c: usize = b as usize;
-    let mut result = 0;
+    let result;
     if let 0 = c % 2 {
         result = a[c];
     } else {
-        result = ((a[(c - 1)] as f64 + a[c] as f64) / 2.0) as i32);
+        result = ((a[(c - 1)] as f64 + a[c] as f64) / 2.0) as i32;
     }
+    result
 }
