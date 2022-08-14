@@ -1,55 +1,41 @@
-use std::mem;
+extern crate arraylist;
 
-// This function borrows a slice
-fn analyze_slice(slice: &[i32]) {
-    println!("first element of the slice: {}", slice[0]);
-    println!("the slice has {} elements", slice.len());
-}
+use std::fmt;
+use arraylist::arl::ArrayList;
 
 fn main() {
-    // Fixed-size array (type signature is superfluous)
-    let xs: [i32; 5] = [1, 2, 3, 4, 5];
+    #[derive(Debug, Clone, PartialEq)]
+    struct Person<'a> {
+        name: &'a str,
+        age: u32,
+    }
 
-    // All elements can be initialized to the same value
-    let ys: [i32; 500] = [0; 500];
-
-    // Indexing starts at 0
-    println!("first element of the array: {}", xs[0]);
-    println!("second element of the array: {}", xs[1]);
-
-    // `len` returns the count of elements in the array
-    println!("number of elements in array: {}", xs.len());
-
-    // Arrays are stack allocated
-    println!("array occupies {} bytes", mem::size_of_val(&xs));
-
-    // Arrays can be automatically borrowed as slices
-    println!("borrow the whole array as a slice");
-    analyze_slice(&xs);
-
-    // Slices can point to a section of an array
-    // They are of the form [starting_index..ending_index]
-    // starting_index is the first position in the slice
-    // ending_index is one more than the last position in the slice
-    println!("borrow a section of the array as a slice");
-    analyze_slice(&ys[1 .. 4]);
-
-    // Example of empty slice `&[]`
-    let empty_array: [u32; 0] = [];
-    assert_eq!(&empty_array, &[]);
-    assert_eq!(&empty_array, &[][..]); // same but more verbose
-
-    // Arrays can be safely accessed using `.get`, which returns an
-    // `Option`. This can be matched as shown below, or used with
-    // `.expect()` if you would like the program to exit with a nice
-    // message instead of happily continue.
-    for i in 0..xs.len() + 1 { // OOPS, one element too far
-        match xs.get(i) {
-            Some(xval) => println!("{}: {}", i, xval),
-            None => println!("Slow down! {} is too far!", i),
+    // To use the `{}` marker, the trait `fmt::Display` must be implemented
+// manually for the type.
+    impl fmt::Display for Person<'_> {
+        // This trait requires `fmt` with this exact signature.
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            // Write strictly the first element into the supplied output
+            // stream: `f`. Returns `fmt::Result` which indicates whether the
+            // operation succeeded or failed. Note that `write!` uses syntax which
+            // is very similar to `println!`.
+            write!(f, "Person: ({} {})", self.name, self.age)
         }
     }
 
-    // Out of bound indexing causes compile error
-    //println!("{}", xs[5]);
+    let array = ArrayList::<Person>::default();
+    array.push(Person { name: "boris", age: 23, });
+    array.push(Person { name: "Tom", age: 34, });
+    array.push(Person { name: "Harry", age: 54, });
+    array.push(Person { name: "Francis", age: 34, });
+    array.push(Person { name: "Phil", age: 23, });
+    array.push(Person { name: "Sam", age: 67, });
+    array.push(Person { name: "Ted", age: 45, });
+    array.push(Person { name: "Fred", age: 14, });
+
+
+    array.for_each(|a| {
+        println!("{}",a)
+    });
+
 }
