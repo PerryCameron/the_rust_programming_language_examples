@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "primitive_types5"
+name = "move_semantics1"
 version = "0.1.0"
