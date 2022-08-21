@@ -40,6 +40,35 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         // will be number of goals conceded from team_2, and similarly
         // goals scored by team_2 will be the number of goals conceded by
         // team_1.
+        
+        // if our hashmap alreadyt contains a key with team one name
+        if !scores.contains_key(&team_1_name) {
+            println!("[team 1] We dont have a key {}", &team_1_name);
+            scores.insert(team_1_name.clone(), Team {
+                name: team_1_name,
+                goals_scored: team_1_score,
+                goals_conceded: team_2_score,
+            });
+        } 
+        else {
+            let mut team = scores.get_mut(&team_1_name).unwrap();
+            team.goals_scored += team_1_score;
+            team.goals_conceded += team_2_score;
+        println!("[team 1] We reached else {}", &team_1_name);
+        }
+        if !scores.contains_key(&team_2_name) {
+            println!("[team 2] We dont have a key {}", &team_2_name);
+            scores.insert(team_2_name.clone(), Team {
+                name: team_2_name,
+                goals_scored: team_2_score,
+                goals_conceded: team_1_score,
+            });
+        } else {
+            println!("[team 2] We dont have a key {}", &team_2_name);
+            let mut team = scores.get_mut(&team_2_name).unwrap();
+            team.goals_scored += team_2_score;
+            team.goals_conceded += team_1_score;
+        }
     }
     scores
 }
@@ -53,7 +82,8 @@ mod tests {
             + "England,France,4,2\n"
             + "France,Italy,3,1\n"
             + "Poland,Spain,2,0\n"
-            + "Germany,England,2,1\n";
+            + "Germany,England,2,1\n"
+            + "England,Spain,1,0\n";
         results
     }
 
@@ -73,7 +103,7 @@ mod tests {
     fn validate_team_score_1() {
         let scores = build_scores_table(get_results());
         let team = scores.get("England").unwrap();
-        assert_eq!(team.goals_scored, 5);
+        assert_eq!(team.goals_scored, 6);
         assert_eq!(team.goals_conceded, 4);
     }
 
@@ -82,6 +112,6 @@ mod tests {
         let scores = build_scores_table(get_results());
         let team = scores.get("Spain").unwrap();
         assert_eq!(team.goals_scored, 0);
-        assert_eq!(team.goals_conceded, 2);
+        assert_eq!(team.goals_conceded, 3);
     }
 }
