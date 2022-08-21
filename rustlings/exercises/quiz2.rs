@@ -18,8 +18,7 @@
 // - The output element is going to be a Vector of strings.
 // Execute `rustlings hint quiz2` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
-
+#[derive(Debug)]
 pub enum Command {
     Uppercase,
     Trim,
@@ -28,13 +27,18 @@ pub enum Command {
 
 mod my_module {
     use super::Command;
-
     // TODO: Complete the function signature!
-    pub fn transformer(input: ???) -> ??? {
+    pub fn transformer(input: Vec<(String,Command)>) -> Vec<(String)> {
         // TODO: Complete the output declaration!
-        let mut output: ??? = vec![];
+        let mut output: Vec<String> = vec![];
+        // (string, command is example of destructuring the tuples in input Vec argument
         for (string, command) in input.iter() {
-            // TODO: Complete the function body. You can do it!
+            let restructure_to_string = match command {
+                Command::Uppercase => string.to_uppercase().to_string(),
+                Command::Trim => string.trim().to_string(),
+                Command::Append(times) => string.to_owned() + &"bar".repeat(*times),
+            };
+            output.push(restructure_to_string);
         }
         output
     }
@@ -43,7 +47,7 @@ mod my_module {
 #[cfg(test)]
 mod tests {
     // TODO: What do we have to import to have `transformer` in scope?
-    use ???;
+    use super::my_module::transformer;
     use super::Command;
 
     #[test]

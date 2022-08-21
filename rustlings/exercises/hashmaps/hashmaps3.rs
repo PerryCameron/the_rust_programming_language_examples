@@ -40,7 +40,7 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         // goals scored by team_2 will be the number of goals conceded by
         // team_1.
         
-        // if our hashmap alreadyt contains a key with team one name
+        // if our hashmap already contains a key with team one name
         if !scores.contains_key(&team_1_name) {
             println!("[team 1] We dont have a key {}", &team_1_name);
             scores.insert(team_1_name.clone(), Team {
